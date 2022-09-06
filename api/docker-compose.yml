@@ -1,0 +1,18 @@
+services:
+  db:
+    image: mysql:5.7
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: skill-mgmt-sys-db
+      MYSQL_USER: django
+      MYSQL_PASSWORD: 6dZFC+7U6H#Ts6PW4NfEJE|r
+      TZ: 'Asia/Tokyo'
+    command: mysqld --character-set-server=utf8 --collation-server=utf8_unicode_ci
+    ports:
+      - '4306:3306'
+    container_name: skill-mgmt-sys-db
+    networks:
+      - skill-mgmt-sys
+networks:
+  skill-mgmt-sys:
+
