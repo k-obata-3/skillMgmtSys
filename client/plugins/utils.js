@@ -72,11 +72,29 @@ class Utils {
     if(val == null) return val;
 
     var valDate = new Date(val);
-    var  month = ("0"+(valDate.getMonth() + 1)).slice(-2)
-    var date =  ("0"+valDate.getDate()).slice(-2)
     var year = valDate.getFullYear()
-    var array = [year, month, date]
+    var month = ("0"+(valDate.getMonth() + 1)).slice(-2)
+    var day =  ("0"+valDate.getDate()).slice(-2)
+    var array = [year, month, day]
     var resultDate = array.join('/')
+    return resultDate
+  }
+
+  static GetSlashDateTime(val) {
+    if(val == null) return val;
+
+    var valDate = new Date(val);
+    var year = valDate.getFullYear()
+    var month = ("0"+(valDate.getMonth() + 1)).slice(-2)
+    var day =  ("0"+valDate.getDate()).slice(-2)
+    var date = [year, month, day]
+    var slashDate = date.join('/')
+
+    var hours = ("0"+(valDate.getHours())).slice(-2)
+    var minutes =  ("0"+valDate.getMinutes()).slice(-2)
+    var time = [hours, minutes]
+    var resultDate = slashDate + ' ' + time.join(':')
+
     return resultDate
   }
 

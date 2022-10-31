@@ -4,6 +4,7 @@
       <el-table-column prop="name" label="名前"></el-table-column>
       <el-table-column prop="department" label="部署"></el-table-column>
       <el-table-column prop="position" label="役職"></el-table-column>
+      <el-table-column prop="lastLogin" label="最終ログイン" width="170"></el-table-column>
       <el-table-column prop="authority" width="50">
         <template slot-scope="scope">
           <div class="authority" v-show="scope.row.authority==0">
@@ -14,7 +15,7 @@
       <el-table-column prop="state" width="50">
         <template slot-scope="scope">
           <div class="state" v-show="scope.row.state==0">
-            <font-awesome-icon :icon="['far', 'circle-xmark']" class="fa-2x" />
+            <font-awesome-icon :icon="['fa', 'ban']" class="fa-2x" />
           </div>
         </template>
       </el-table-column>

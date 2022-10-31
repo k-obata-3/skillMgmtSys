@@ -23,6 +23,58 @@ class ApiService {
     });
   }
 
+  async getLoginUserInfo(id, callback) {
+    const url = `${this.BASE_URL}/selfUserInfoRetrieve/?user_id=${id}`;
+    await this.axios.get(url)
+    .then(response => {
+      callback(response.data);
+    })
+    .catch(err => {
+
+    })
+    .finally(() => {
+    });
+  }
+
+  async updateLoginUserInfo(id, param, callback) {
+    const url = `${this.BASE_URL}/selfUserInfoUpdate/?user_id=${id}`;
+    await this.axios.put(url, param)
+    .then(response => {
+      callback(response.data);
+    })
+    .catch(err => {
+
+    })
+    .finally(() => {
+    });
+  }
+
+  async resetPassword(id, param, callback) {
+    const url = `${this.BASE_URL}/passwordReset/?user_id=${id}`;
+    await this.axios.put(url, param)
+    .then(response => {
+      callback(response.data);
+    })
+    .catch(err => {
+
+    })
+    .finally(() => {
+    });
+  }
+
+  async updatePassword(id, param, callback) {
+    const url = `${this.BASE_URL}/passwordUpdate/?user_id=${id}`;
+    await this.axios.put(url, param)
+    .then(response => {
+      callback(response.data);
+    })
+    .catch(err => {
+
+    })
+    .finally(() => {
+    });
+  }
+
   async getUserInfo(id, callback) {
     const url = `${this.BASE_URL}/userInfoRetrieve/?user_id=${id}`;
     await this.axios.get(url)
@@ -372,11 +424,6 @@ class ApiService {
 
 export default (context, inject) => {
   context.$axios.onRequest((config) => {
-    // context.$axios.defaults.headers.common['Accept'] = 'application/json';
-    // context.$axios.defaults.headers.common['Content-Type'] = 'application/json;charset=utf-8';
-    // context.$axios.defaults.headers.common['Access-Control-Allow-Origin'] = 'http://192.168.0.253:8000';
-    // context.$axios.defaults.headers.common['Access-Control-Allow-Origin'] = 'http://192.168.0.250';
-    // context.$axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
     context.$axios.defaults.headers.common['Access-Control-Allow-Credentials'] = 'true';
     return config;
   })

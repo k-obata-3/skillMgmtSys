@@ -2,13 +2,11 @@ import time
 import jwt
 from rest_framework.authentication import BaseAuthentication
 from rest_framework import exceptions
+from django.conf import settings
 
 from .utils import Utils
 from api.models import User
 from api.models import UserInfo
-
-# SHA256でmediaproから生成
-SECRET_KEY = 'aa785c482395933b5fa6535b976653894a10b258209f7f5c43416129a6249774'
 
 class NormalAuthentication(BaseAuthentication):
   def authenticate(self, request):
@@ -18,7 +16,7 @@ class NormalAuthentication(BaseAuthentication):
     user_obj = User.objects.filter(mail_address=user_id, state=1).first()
     if not user_obj:
       raise exceptions.AuthenticationFailed('認証失敗')
-    elif user_obj.password != password:
+    elif user_obj.password != Utils.getPasswordHash(password):
       raise exceptions.AuthenticationFailed('パスワードあってません')
     user_info_obj = UserInfo.objects.filter(user=user_obj.id).first()
     token = generate_jwt(user_obj)
@@ -49,7 +47,7 @@ def generate_jwt(user):
       "authority": user.authority,
       "exp": timestamp,
     },
-    SECRET_KEY).decode("utf-8")
+    settings.JWT_SECRET_KEY).decode("utf-8")
 
 class JWTAuthentication(BaseAuthentication):
   keyword = 'JWT'
@@ -75,7 +73,7 @@ class JWTAuthentication(BaseAuthentication):
     try:
       jwt_token = auth[1]
       # decode時に有効期間が自動検証されるので自前検証不要
-      jwt_info = jwt.decode(jwt_token, SECRET_KEY)
+      jwt_info = jwt.decode(jwt_token, settings.JWT_SECRET_KEY)
 
       user_id = jwt_info.get("user_id")
       try:

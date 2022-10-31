@@ -25,7 +25,9 @@ class DepartmentListAPIView(ListAPIView):
   renderer_classes = (JSONRenderer, )
 
   def get(self, request):
-    company_id = self.request.GET.get('company_id')
+    # 認証情報からユーザと権限を取得
+    login_user = self.request.user
+    company_id = login_user.user.company_id
 
     try:
       department = Department.objects.filter(company = company_id).all()
@@ -67,10 +69,18 @@ class DepartmentCreateAPIView(CreateAPIView):
   def create(self, request):
     # 認証情報からユーザと権限を取得
     login_user = self.request.user
+    company_id = login_user.user.company_id
+    is_admin = login_user.is_admin
+
+    # 管理者ではない場合は認証エラー
+    if is_admin is not True:
+      msg = "Authorization 無効"
+      raise exceptions.AuthenticationFailed(msg)
+
     itemReqData = {
       'id': request.data['id'],
       'name': request.data['name'],
-      'company_id': login_user.user.company.id,
+      'company_id': company_id,
     }
 
     try:
@@ -86,7 +96,7 @@ class DepartmentCreateAPIView(CreateAPIView):
             raise exceptions.ValidationError("部署情報の入力内容が不正です", status.HTTP_422_UNPROCESSABLE_ENTITY)
         else:
           # 更新
-          department = Department.objects.get(company = login_user.user.company.id, id = request.data['id'])
+          department = Department.objects.get(company = company_id, id = request.data['id'])
           serializer = DepartmentSerializer(department, data=itemReqData)
           if serializer.is_valid():
             serializer.update(department, itemReqData, login_user)
@@ -127,10 +137,20 @@ class DepartmentDestroyAPIView(DestroyAPIView):
   serializer_class = DepartmentSerializer
 
   def destroy(self, request):
+    # 認証情報からユーザと権限を取得
+    login_user = self.request.user
+    company_id = login_user.user.company_id
+    is_admin = login_user.is_admin
+
+    # 管理者ではない場合は認証エラー
+    if is_admin is not True:
+      msg = "Authorization 無効"
+      raise exceptions.AuthenticationFailed(msg)
+
     id = self.request.GET.get('id');
 
     try:
-      department = Department.objects.get(id = id);
+      department = Department.objects.filter(id = id, company = company_id);
       department.delete()
 
     except Exception as e:

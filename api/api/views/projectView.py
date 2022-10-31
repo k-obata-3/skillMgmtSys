@@ -26,7 +26,10 @@ class ProjectListAPIView(ListAPIView):
   renderer_classes = (JSONRenderer, )
 
   def get(self, request):
-    company_id = self.request.GET.get('company_id')
+    # 認証情報からユーザと権限を取得
+    login_user = self.request.user
+    company_id = login_user.user.company_id
+
     limit = self.request.GET.get('limit')
     ofset = self.request.GET.get('offset')
 
@@ -63,10 +66,14 @@ class ProjectRetrieveAPIView(RetrieveAPIView):
   renderer_classes = (JSONRenderer, )
 
   def get(self, request):
+    # 認証情報からユーザと権限を取得
+    login_user = self.request.user
+    company_id = login_user.user.company_id
+
     project_id = self.request.GET.get('project_id')
 
     try:
-      project = Project.objects.get(pk = project_id)
+      project = Project.objects.filter(id = project_id, company = company_id).first()
 
     except Exception as e:
       print('【ERROR】:' + traceback.format_exc())
@@ -95,8 +102,16 @@ class ProjectCreateAPIView(CreateAPIView):
   def create(self, request):
     # 認証情報からユーザと権限を取得
     login_user = self.request.user
+    company_id = login_user.user.company_id
+    is_admin = login_user.is_admin
+
+    # 管理者ではない場合は認証エラー
+    if is_admin is not True:
+      msg = "Authorization 無効"
+      raise exceptions.AuthenticationFailed(msg)
+
     projectReqData = {
-      'company_id': login_user.user.company.id,
+      'company_id': company_id,
       'name': request.data['name'],
       'overview': request.data['overview'],
       'start_date': request.data['start_date'],
@@ -142,11 +157,21 @@ class ProjectUpdateAPIView(UpdateAPIView):
   serializer_class = ProjectSerializer
 
   def update(self, request):
+    # 認証情報からユーザと権限を取得
+    login_user = self.request.user
+    company_id = login_user.user.company_id
+    is_admin = login_user.is_admin
+
+    # 管理者ではない場合は認証エラー
+    if is_admin is not True:
+      msg = "Authorization 無効"
+      raise exceptions.AuthenticationFailed(msg)
+
     project_id = self.request.GET.get('id')
     # 認証情報からユーザと権限を取得
     login_user = self.request.user
     projectReqData = {
-      'company_id': login_user.user.company.id,
+      'company_id': company_id,
       'name': request.data['name'],
       'overview': request.data['overview'],
       'start_date': request.data['start_date'],
@@ -155,7 +180,7 @@ class ProjectUpdateAPIView(UpdateAPIView):
 
     try:
       with transaction.atomic():
-        project = Project.objects.get(id = project_id)
+        project = Project.objects.filter(id = project_id, company = company_id).first()
 
         serializer = ProjectSerializer(project, data=projectReqData)
         if serializer.is_valid():
@@ -194,10 +219,20 @@ class ProjectDestroyAPIView(DestroyAPIView):
   serializer_class = ProjectSerializer
 
   def destroy(self, request):
+    # 認証情報からユーザと権限を取得
+    login_user = self.request.user
+    company_id = login_user.user.company_id
+    is_admin = login_user.is_admin
+
+    # 管理者ではない場合は認証エラー
+    if is_admin is not True:
+      msg = "Authorization 無効"
+      raise exceptions.AuthenticationFailed(msg)
+
     project_id = self.request.GET.get('id');
 
     try:
-      project = Project.objects.get(id = project_id);
+      project = Project.objects.filter(id = project_id, company = company_id);
       project.delete()
 
     except Exception as e:

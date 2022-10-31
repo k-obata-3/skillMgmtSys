@@ -1,4 +1,6 @@
 import datetime
+import hashlib
+from django.conf import settings
 
 """ [Uilis]
     共通汎用処理
@@ -26,3 +28,12 @@ class Utils():
       return str(age -1)
 
     return str(age)
+
+  def getInitialPasswordHash():
+    password = settings.INITIAL_PASSWORD
+    hashPass = hashlib.md5(password.encode()).hexdigest()
+    return Utils.getPasswordHash(hashPass)
+
+  def getPasswordHash(value):
+    password = value + settings.PASS_SECRET_SALT
+    return hashlib.md5(password.encode()).hexdigest()

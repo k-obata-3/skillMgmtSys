@@ -106,7 +106,7 @@ thead tr th {
   top: 5vh;
   left: 5%;
   height: 80vh;
-  min-width: 90%;
+  width: 90%;
   background-color: #ffffff;
   border: solid 1px #333333;
   box-shadow: 3px 3px 0px rgba(0, 0, 0, 0.2);

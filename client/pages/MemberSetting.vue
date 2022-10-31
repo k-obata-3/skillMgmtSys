@@ -20,7 +20,10 @@
                 <el-button type="secondary" v-on:click="onUpdate($event)">更新</el-button>
               </div>
             </div>
-            <UserInfoEditView ref="userEdit" :usesrId="this.userId" :isAdd="false" :isSetting="true" @onUpdateComplete="onUpdateComplete"></UserInfoEditView>
+            <UserInfoEditView ref="userEdit" :usesrId="this.userId" :isAdd="false" @onUpdateComplete="onUpdateComplete"></UserInfoEditView>
+            <div class="password-reset-btn">
+              <el-button type="warning" v-on:click="onPasswordReset($event)">パスワード初期化</el-button>
+            </div>
           </div>
         </div>
       </template>
@@ -33,7 +36,7 @@
                 <el-button type="secondary" v-on:click="onRegistered($event)">登録</el-button>
               </div>
             </div>
-            <UserInfoEditView ref="userAdd" :usesrId="null" :isAdd="true" :isSetting="true" @onAddComplete="onAddComplete"></UserInfoEditView>
+            <UserInfoEditView ref="userAdd" :usesrId="null" :isAdd="true" @onAddComplete="onAddComplete"></UserInfoEditView>
           </div>
         </div>
       </template>
@@ -93,11 +96,12 @@ export default {
           data.userInfoList.forEach(info => {
             var user = {
               id: info.id,
-              name: info.first_name + ' ' + info.last_name,
+              name: info.last_name + ' ' + info.first_name,
               department: info.department.map(v => v.name).join('、'),
               position: info.position,
               authority: info.authority,
               state: info.state,
+              lastLogin: vm.$utils.GetSlashDateTime(info.last_login),
             }
             users.push(user)
           });
@@ -128,6 +132,24 @@ export default {
     onRegistered(event) {
       this.$refs.userAdd.onRegistered(event);
     },
+    onPasswordReset() {
+      this.$confirm('パスワードを初期化します。よろしいですか？', '確認', {
+        confirmButtonText: 'OK',
+        cancelButtonText: 'キャンセル',
+        type: 'warning',
+        center: true
+      }).then(() => {
+        var p = {}
+        var param = JSON.parse(JSON.stringify(p));
+        this.$apiService.resetPassword(this.userId, param, (res) => {
+          if(res != null) {
+            this.onPasswordResetComplete();
+          }
+        });
+      }).catch(() => {
+
+      });
+    },
     onAddComplete() {
       this.$message({type: 'success', message: '登録しました。'});
       this.setup(false, false)
@@ -137,6 +159,9 @@ export default {
       this.$message({type: 'success', message: '登録しました。'});
       this.setup(false, false)
       this.setUserId(null);
+    },
+    onPasswordResetComplete() {
+      this.$message({type: 'success', message: 'パスワードを初期化しました。'});
     },
     setUserId(id) {
       this.userId = id;
@@ -169,6 +194,12 @@ export default {
   /* display: inline-block; */
   /* min-width: 30%; */
   /* padding: 0.5rem 2rem 0 0; */
+}
+
+.password-reset-btn {
+  margin-top: 1rem;
+  text-align: right;
+  padding: 0.5rem;
 }
 
 .edit-form, .add-form {

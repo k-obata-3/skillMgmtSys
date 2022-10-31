@@ -1,0 +1,17 @@
+services:
+  nuxt:
+    build: .
+    # image: client
+    ports:
+      - 8080:8000
+    volumes:
+      - .:/nuxt
+      # - /nuxt/node_modules
+    tty: true
+    working_dir: /client
+    command: npm run dev
+    container_name: skill-mgmt-sys-client
+    networks:
+      - skill-mgmt-sys
+networks:
+  skill-mgmt-sys:

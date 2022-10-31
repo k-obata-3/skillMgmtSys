@@ -1,8 +1,11 @@
 <template>
   <div class="navigation">
     <div class="nav-row" v-bind:class="{hidden: page.meta.hidden}" v-for="page in this.routes" v-bind:key="page.path" v-on:click="newPage(page, $event)">
-      <span class="nav-row-name" v-bind:class="{select: page.meta.select}">
+      <span class="nav-row-name" v-show="isShowNav" v-bind:class="{select: page.meta.select}">
         {{page.name}}
+      </span>
+      <span v-show="!isShowNav" v-bind:class="{selectIcon: page.meta.select}">
+        <font-awesome-icon :icon="page.meta.icon" size="lg" />
       </span>
     </div>
   </div>
@@ -12,6 +15,9 @@
 export default {
   name: 'Navigation',
   components: {
+  },
+  props: {
+    isShowNav: true,
   },
   data() {
     return {
@@ -104,6 +110,10 @@ export default {
 
 .nav-row:hover:not(.hidden) .nav-row-name, .select { 
   background: white;
+  color: #333333;
+}
+
+.nav-row:hover:not(.hidden), .selectIcon { 
   color: #333333;
 }
 

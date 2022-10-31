@@ -42,8 +42,6 @@ export default ({
   beforeMount() {
   },
   mounted() {
-    this.width = 200;
-    this.height = 200;
     this.addPlugin({
       afterDraw(chart) {
         let ctx = chart.ctx

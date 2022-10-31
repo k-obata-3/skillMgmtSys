@@ -81,8 +81,8 @@ export default {
               temp.push({
                 first_name: user.first_name,
                 last_name: user.last_name,
-                department: userDepartment.join('、'),
-                position: user.position,
+                department: userDepartment.length == 0 ? '-' : userDepartment.join('、'),
+                position: user.position ?? '-',
                 userInfo: user,
                 career_info: user.career_info,
                 career_info_dic: user.career_info_dic,

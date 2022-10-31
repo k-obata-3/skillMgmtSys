@@ -27,7 +27,16 @@ class MasterItemListAPIView(ListAPIView):
   renderer_classes = (JSONRenderer, )
 
   def get(self, request):
-    company_id = self.request.GET.get('company_id')
+    # 認証情報からユーザと権限を取得
+    login_user = self.request.user
+    company_id = login_user.user.company_id
+    is_admin = login_user.is_admin
+
+    # 管理者ではない場合は認証エラー
+    if is_admin is not True:
+      msg = "Authorization 無効"
+      raise exceptions.AuthenticationFailed(msg)
+
     key = self.request.GET.get('key')
 
     try:
@@ -64,7 +73,9 @@ class MasterItemAllListAPIView(ListAPIView):
   renderer_classes = (JSONRenderer, )
 
   def get(self, request):
-    company_id = self.request.GET.get('company_id')
+    # 認証情報からユーザと権限を取得
+    login_user = self.request.user
+    company_id = login_user.user.company_id
 
     try:
       key_list = Const.KEY_LIST
@@ -108,11 +119,19 @@ class MasterItemCreateAPIView(CreateAPIView):
   def create(self, request):
     # 認証情報からユーザと権限を取得
     login_user = self.request.user
+    is_admin = login_user.is_admin
+    company_id = login_user.user.company_id
+
+    # 管理者ではない場合は認証エラー
+    if is_admin is not True:
+      msg = "Authorization 無効"
+      raise exceptions.AuthenticationFailed(msg)
+
     itemReqData = {
       'id': request.data['id'],
       'key': request.data['key'],
       'value': request.data['name'],
-      'company_id': login_user.user.company.id,
+      'company_id': company_id,
     }
 
     try:
@@ -169,10 +188,20 @@ class MasterItemDestroyAPIView(DestroyAPIView):
   serializer_class = MasterItemSerializer
 
   def destroy(self, request):
+    # 認証情報からユーザと権限を取得
+    login_user = self.request.user
+    is_admin = login_user.is_admin
+    company_id = login_user.user.company_id
+
+    # 管理者ではない場合は認証エラー
+    if is_admin is not True:
+      msg = "Authorization 無効"
+      raise exceptions.AuthenticationFailed(msg)
+
     master_id = self.request.GET.get('id');
 
     try:
-      masterItem = MasterItem.objects.get(id = master_id);
+      masterItem = MasterItem.objects.get(id = master_id, company = company_id);
       masterItem.delete()
 
     except Exception as e:

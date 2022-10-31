@@ -1,36 +1,30 @@
 <template>
   <div class="user-info-edit-view">
     <div class="user-info-form">
-    <el-form autocomplete="off">
+      <el-form autocomplete="off">
         <div class="mail-address" v-if="this.isAdd">
           <el-form-item class="require" label="ID（メールアドレス）">
             <el-input v-model="form.mail_address"></el-input>
           </el-form-item>
         </div>
 
-        <div class="password" v-if="this.isAdd">
-          <el-form-item class="require" label="パスワード">
-            <el-input v-model="form.password"></el-input>
-          </el-form-item>
-        </div>
-
         <div class="first-last-name">
           <el-form-item class="require" label="姓（カナ）">
-            <el-input v-model="form.first_name_kana"></el-input>
+            <el-input v-model="form.last_name_kana"></el-input>
           </el-form-item>
 
           <el-form-item class="require" label="名（カナ）">
-            <el-input v-model="form.last_name_kana"></el-input>
+            <el-input v-model="form.first_name_kana"></el-input>
           </el-form-item>
         </div>
 
         <div class="first-last-name">
           <el-form-item class="require" label="姓">
-            <el-input v-model="form.first_name"></el-input>
+            <el-input v-model="form.last_name"></el-input>
           </el-form-item>
 
           <el-form-item class="require" label="名">
-            <el-input v-model="form.last_name"></el-input>
+            <el-input v-model="form.first_name"></el-input>
           </el-form-item>
         </div>
 
@@ -53,12 +47,12 @@
           </el-form-item>
         </div>
 
-        <div class="authority" v-if="this.isSetting">
+        <div class="authority">
           <el-form-item label="権限"></el-form-item>
           <el-radio v-model="form.authority" v-for="item in authorityOptions" :key="item.value" :value="item.value" :label="item.text" border></el-radio>
         </div>
 
-        <div class="state" v-if="this.isSetting && !this.isAdd">
+        <div class="state" v-if="!this.isAdd">
           <el-form-item label="状態"></el-form-item>
           <el-radio v-model="form.state" v-for="item in stateOptions" :key="item.value" :value="item.value" :label="item.text" border></el-radio>
         </div>
@@ -76,13 +70,11 @@ export default {
   props: {
     usesrId: null,
     isAdd: false,
-    isSetting: false,
   },
   data() {
     return{
       form: {
         mail_address: '',
-        password: '',
         first_name_kana: '',
         last_name_kana: '',
         first_name: '',
@@ -141,11 +133,10 @@ export default {
       var selecteds = this.selectedDepartment.map(function(department) {
         return vm.departmentOptions.filter(v => v.text == department).map(m => m.value).join(',');
       });
-      var passwordHash = this.$utils.getHashText(this.form.password);
       var inputData = {
         'company': this.$utils.getCompanyId(),
         'mail_address': this.form.mail_address,
-        'password': passwordHash,
+        'password': null,
         'first_name_kana': this.form.first_name_kana,
         'last_name_kana': this.form.last_name_kana,
         'first_name': this.form.first_name,
@@ -175,28 +166,15 @@ export default {
       }
     },
     callApi(id){
-      if(id == null) return;
       var vm = this;
-      this.$apiService.getUserInfo(id, (res) => {
-        if(res != null) {
-          var userInfo = userInfo = JSON.parse(res.data);
-          vm.form.first_name_kana = userInfo.first_name_kana;
-          vm.form.last_name_kana = userInfo.last_name_kana;
-          vm.form.first_name = userInfo.first_name;
-          vm.form.last_name = userInfo.last_name;
-          vm.form.position = userInfo.position;
-          vm.form.birthday = vm.$utils.GetDate(userInfo.birthday);
-          vm.form.authority = vm.authorityOptions.filter(v => v.value == userInfo.authority)[0].text;
-          vm.form.state = vm.stateOptions.filter(v => v.value == userInfo.state)[0].text;
-
-          userInfo.department.forEach(department => {
-            vm.departmentOptions.push({text: department.name, value: department.id})
-            if(department.selected) {
-                vm.selectedDepartment.push(department.name)
-            }
-          });
-        }
-      });
+      if(!this.isAdd) {
+        // 編集
+        this.$apiService.getUserInfo(id, (res) => {
+          if(res != null) {
+            this.setForm(res, vm);
+          }
+        });
+      }
     },
     getDepartment(id){
       if(id == null) return;
@@ -210,6 +188,24 @@ export default {
           });
         }
       })
+    },
+    setForm(res, vm){
+      var userInfo = userInfo = JSON.parse(res.data);
+      vm.form.first_name_kana = userInfo.first_name_kana;
+      vm.form.last_name_kana = userInfo.last_name_kana;
+      vm.form.first_name = userInfo.first_name;
+      vm.form.last_name = userInfo.last_name;
+      vm.form.position = userInfo.position;
+      vm.form.birthday = vm.$utils.GetDate(userInfo.birthday);
+      vm.form.authority = vm.authorityOptions.filter(v => v.value == userInfo.authority)[0].text;
+      vm.form.state = vm.stateOptions.filter(v => v.value == userInfo.state)[0].text;
+
+      userInfo.department.forEach(department => {
+        vm.departmentOptions.push({text: department.name, value: department.id})
+        if(department.selected) {
+            vm.selectedDepartment.push(department.name)
+        }
+      });
     },
     clearForm(){
       this.form.first_name_kana = '';

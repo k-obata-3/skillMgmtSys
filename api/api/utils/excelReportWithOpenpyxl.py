@@ -70,9 +70,9 @@ class ExcelReportWithOpenpyxl:
           if tag == ExcelReportWithOpenpyxl.tag_ud_date:
             text = output_date.strftime('%Y年%m月%d日')
           elif tag == ExcelReportWithOpenpyxl.tag_name_kana:
-            text = userInfo.first_name_kana + '  ' + userInfo.last_name_kana
+            text = userInfo.last_name_kana + '  ' + userInfo.first_name_kana
           elif tag == ExcelReportWithOpenpyxl.tag_name:
-            text = userInfo.first_name + '  ' + userInfo.last_name
+            text = userInfo.last_name + '  ' + userInfo.first_name
           elif tag == ExcelReportWithOpenpyxl.tag_birthday:
             text = userInfo.birthday.strftime('%Y年%m月%d日')
           elif tag == ExcelReportWithOpenpyxl.tag_age:
@@ -97,8 +97,10 @@ class ExcelReportWithOpenpyxl:
             # タグがNoneでも空でもない および テキストがNoneまたは空文字の場合
             cell.value = ''
 
-    file_name = 'スキル表_{0}_{1}.xlsx'.format(userInfo.first_name + userInfo.last_name, output_date.strftime("%Y%m%d"))
+    file_name = 'スキル表_{0}_{1}.xlsx'.format(userInfo.last_name + userInfo.first_name, output_date.strftime("%Y%m%d"))
     workbook.save('{0}/{1}'.format(temp_dir_path, file_name))
+    workbook.close()
+
     return file_name
 
   def getOutputTag(cell):

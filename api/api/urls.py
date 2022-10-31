@@ -13,6 +13,10 @@ urlpatterns = [
   # 部署情報削除
   url(r'^departmentDestroy/$', departmentView.DepartmentDestroyAPIView.as_view()),
 
+  # ログインユーザ情報取得
+  url(r'^selfUserInfoRetrieve/$', userInfoView.SelfUserInfoRetrieveAPIView.as_view()),
+  # ログインユーザ情報更新
+  url(r'^selfUserInfoUpdate/$', userInfoView.SelfUserInfoUpdateAPIView.as_view()),
   # ユーザ情報一覧取得
   url(r'^userInfoList/$', userInfoView.UserInfoListAPIView.as_view()),
   # ユーザ情報（自身を除く）一覧取得
@@ -23,6 +27,10 @@ urlpatterns = [
   url(r'^userCreate', userInfoView.UserCreateAPIView.as_view()),
   # ユーザ情報更新
   url(r'^userInfoUpdate/$', userInfoView.UserInfoUpdateAPIView.as_view()),
+  # パスワード初期化
+  url(r'^passwordReset/$', userInfoView.PasswordResetAPIView.as_view()),
+  # ログインユーザパスワード更新
+  url(r'^passwordUpdate/$', userInfoView.PasswordUpdateAPIView.as_view()),
 
   # 経歴情報Dictionary取得
   url(r'^careerInfoDicRetrieve/$', careerInfoView.CareerInfoDicRetrieveAPIView.as_view()),

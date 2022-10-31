@@ -1,9 +1,11 @@
 import traceback
+import json
+import glob
+import os
 from rest_framework import status
 from rest_framework import exceptions
 from rest_framework.generics import ListAPIView, RetrieveAPIView, CreateAPIView, UpdateAPIView, DestroyAPIView
 from rest_framework.response import Response
-import json
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
 from django.http import FileResponse
@@ -31,10 +33,14 @@ class CareerInfoDicRetrieveAPIView(RetrieveAPIView):
   renderer_classes = (JSONRenderer, )
 
   def get(self, request):
+    # 認証情報からユーザと権限を取得
+    login_user = self.request.user
+    company_id = login_user.user.company_id
+
     user_id = self.request.GET.get('user_id')
 
     try:
-      career_info = CareerInfo.objects.filter(user = user_id)
+      career_info = CareerInfo.objects.filter(user = user_id, user__company = company_id)
       career_info_item = CareerInfoItem.objects.filter(career_info__user = user_id).all()
 
       result = {
@@ -65,18 +71,28 @@ class CareerInfoListAPIView(ListAPIView):
   renderer_classes = (JSONRenderer, )
 
   def get(self, request):
+    # 認証情報からユーザと権限を取得
+    login_user = self.request.user
+    login_user_id = login_user.user.id
+    company_id = login_user.user.company_id
     user_id = self.request.GET.get('user_id')
+
+    # ログインユーザ自身ではない場合は認証エラー
+    if str(login_user_id) != user_id:
+      msg = "Authorization 無効"
+      raise exceptions.AuthenticationFailed(msg)
+
     limit = self.request.GET.get('limit')
     ofset = self.request.GET.get('offset')
 
     try:
-      total_count = career_info = CareerInfo.objects.filter(user = user_id).count()
-      career_info = CareerInfo.objects.filter(user = user_id).all().order_by("start_date")[int(ofset):(int(ofset) + int(limit))]
+      total_count = career_info = CareerInfo.objects.filter(user = user_id, user__company = company_id).count()
+      career_info = CareerInfo.objects.filter(user = user_id, user__company = company_id).all().order_by("start_date")[int(ofset):(int(ofset) + int(limit))]
 
       result = {
         'careerInfo': career_info,
         'totalCount': total_count
-      };
+      }
 
     except Exception as e:
       print('【ERROR】:' + traceback.format_exc())
@@ -102,10 +118,16 @@ class CareerInfoRetrieveAPIView(RetrieveAPIView):
   renderer_classes = (JSONRenderer, )
 
   def get(self, request):
+    # 認証情報からユーザと権限を取得
+    login_user = self.request.user
+    company_id = login_user.user.company_id
+    login_user_id = login_user.user.id
+
     career_id = self.request.GET.get('id')
 
     try:
-      career_info = CareerInfo.objects.get(id = career_id)
+      career_info = CareerInfo.objects.filter(id = career_id, user = login_user_id, user__company = company_id).first()
+
       key_list = Const.KEY_LIST
       dic = {}
       for key_name in key_list:
@@ -149,6 +171,16 @@ class CareerInfoCreateAPIView(CreateAPIView):
   serializer_class = CareerInfoSerializer
 
   def create(self, request):
+    # 認証情報からユーザと権限を取得
+    login_user = self.request.user
+    login_user_id = login_user.user.id
+    user_id = request.data['user']
+
+    # ログインユーザ自身ではない場合は認証エラー
+    if str(login_user_id) != user_id:
+      msg = "Authorization 無効"
+      raise exceptions.AuthenticationFailed(msg)
+
     try:
       with transaction.atomic():
         serializer = CareerInfoSerializer(data=request.data)
@@ -206,7 +238,16 @@ class CareerInfoUpdateAPIView(UpdateAPIView):
   serializer_class = CareerInfoSerializer
 
   def update(self, request):
-    
+    # 認証情報からユーザと権限を取得
+    login_user = self.request.user
+    login_user_id = login_user.user.id
+    user_id = request.data['user']
+
+    # ログインユーザ自身ではない場合は認証エラー
+    if str(login_user_id) != user_id:
+      msg = "Authorization 無効"
+      raise exceptions.AuthenticationFailed(msg)
+
     career_id = self.request.GET.get('id')
 
     try:
@@ -284,10 +325,20 @@ class CareerInfoDestroyAPIView(DestroyAPIView):
   serializer_class = CareerInfoSerializer
 
   def destroy(self, request):
-    career_id = self.request.GET.get('id');
+    # 認証情報からユーザと権限を取得
+    login_user = self.request.user
+    login_user_id = login_user.user.id
+
+    career_id = self.request.GET.get('id')
 
     try:
-      career_info = CareerInfo.objects.get(id = career_id);
+      career_info = CareerInfo.objects.get(id = career_id)
+
+      # ログインユーザ自身ではない場合は認証エラー
+      if login_user_id != career_info.user.id:
+        msg = "Authorization 無効"
+        raise exceptions.AuthenticationFailed(msg)
+
       career_info.delete()
 
     except Exception as e:
@@ -315,6 +366,7 @@ class CareerInfoOutputAPIView(APIView):
     login_user = self.request.user
     is_admin = login_user.is_admin
     login_user_id = login_user.user.id
+    company_id = login_user.user.company_id
     user_id = self.request.GET.get('user_id')
 
     # ログインユーザ自身ではないユーザの経歴情報を出力する場合は、管理者権限チェック
@@ -325,8 +377,8 @@ class CareerInfoOutputAPIView(APIView):
         raise exceptions.AuthenticationFailed(msg)
 
     try:
-      career_info = CareerInfo.objects.filter(user = user_id).all().order_by("start_date")
-      user_info = UserInfo.objects.get(user = user_id)
+      career_info = CareerInfo.objects.filter(user = user_id, user__company = company_id).all().order_by("start_date")
+      user_info = UserInfo.objects.get(user = user_id, user__company = company_id)
 
       career_info_item_dic = {}
       key_list = Const.KEY_LIST
@@ -339,6 +391,10 @@ class CareerInfoOutputAPIView(APIView):
         career_info_item_dic[str(info.id)] = dic
 
       temp_dir_path = 'temp'
+      # 前方一致で前回作成したファイルを削除
+      for file in glob.glob(os.getcwd() + '/' + temp_dir_path + '/スキル表_' + user_info.last_name + user_info.first_name + '*'):
+        os.remove(file)
+
       # os.makedirs(temp_dir_path, exist_ok=True)
       file_name = ExcelReportWithOpenpyxl.write(career_info, career_info_item_dic, user_info, temp_dir_path)
       quoted_filename = urllib.parse.quote(file_name)
@@ -371,7 +427,9 @@ class CareerInfoAllListAPIView(ListAPIView):
   renderer_classes = (JSONRenderer, )
 
   def get(self, request):
-    company_id = self.request.GET.get('company_id')
+    # 認証情報からユーザと権限を取得
+    login_user = self.request.user
+    company_id = login_user.user.company_id
 
     try:
       career_info = CareerInfo.objects.filter(user__company = company_id, user__state = 1).all()

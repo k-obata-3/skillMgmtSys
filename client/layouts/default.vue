@@ -1,12 +1,15 @@
 <template>
   <div>
-    <div class="left">
-      <div class="nav-title">
-        <h3><span>スキル管理システム</span></h3>
+    <div class="left" v-bind:style="leftStyles">
+      <div class="menu-bar" v-on:click="onMenuClick()">
+        <font-awesome-icon :icon="['fa', 'bars']" class="fa-2x" />
       </div>
-      <Navigation v-if="this.onLogin"></Navigation>
+      <div class="nav-title">
+        <h3 v-if="this.isShowNav"><span>スキル管理システム</span></h3>
+      </div>
+      <Navigation v-if="this.onLogin" :isShowNav="this.isShowNav"></Navigation>
     </div>
-    <div class="right">
+    <div class="right" v-bind:style="rightStyles">
       <Nuxt/>
     </div>
   </div>
@@ -22,6 +25,14 @@ export default ({
   data() {
     return {
       onLogin: false,
+      isShowNav: true,
+      leftStyles: {
+        width: '200px',
+      },
+      rightStyles: {
+        width: 'calc(100% - 4rem - 200px)',
+        left: '200px',
+      },
     }
   },
   beforeCreated() {
@@ -44,6 +55,27 @@ export default ({
   destroyed() {
   },
   methods: {
+    onMenuClick() {
+      this.isShowNav = !this.isShowNav;
+      if(this.isShowNav) {
+        this.leftStyles = {
+          width: '200px',
+        };
+        this.rightStyles = {
+          width: 'calc(100% - 4rem - 200px)',
+          left: '200px',
+        };
+      } else {
+        this.leftStyles = {
+          width: '50px',
+        };
+        this.rightStyles = {
+          width: 'calc(100% - 4rem - 50px)',
+          left: '50px',
+        };
+      }
+
+    },
   },
   watch: {
     '$route'() {
@@ -115,4 +147,13 @@ body {
   /* display: none; */
   /* -webkit-appearance: none; */
 }
+
+.menu-bar {
+  width: 30px;
+  padding-left: 10px;
+  margin-top: 10px;
+  color: white;
+  cursor: pointer;
+}
+
 </style>

@@ -12,10 +12,12 @@ class UserSerializer(serializers.ModelSerializer):
   authority = serializers.IntegerField()
   # 状態
   state = serializers.IntegerField()
+  # 最終ログイン
+  lastLogin = serializers.DateTimeField(required=False, allow_null=True)
 
   class Meta:
     model = User
-    fields = ('company', 'mail_address', 'password', 'authority', 'state')
+    fields = ('company', 'mail_address', 'password', 'authority', 'state', 'lastLogin')
 
   def update(self, instance, validated_data, login_user):
     instance.authority = validated_data.get('authority', instance.authority)
@@ -26,9 +28,9 @@ class UserSerializer(serializers.ModelSerializer):
 
     return instance
 
-  def save(self, validated_data, login_user):
+  def save(self, validated_data, login_user, company_id):
     return User.objects.create(
-      company = Company.objects.get(pk = validated_data.get('company')),
+      company = Company.objects.get(pk = company_id),
       mail_address = validated_data.get('mail_address'),
       password = validated_data.get('password'),
       authority = validated_data.get('authority'),
@@ -36,6 +38,22 @@ class UserSerializer(serializers.ModelSerializer):
       add_user = login_user.id,
       ud_user = login_user.id
     )
+  
+  def updateLoginDateTime(self, instance, dateTimeNow):
+    instance.version = instance.version + 1
+    instance.ud_user = instance.id
+    instance.last_login = dateTimeNow
+    instance.save()
+
+    return instance
+
+  def passwordUpdate(self, instance, password, login_user):
+    instance.password = password
+    instance.version = instance.version + 1
+    instance.ud_user = login_user.id
+    instance.save()
+
+    return instance
 
 class UserInfoSerializer(serializers.ModelSerializer):
   # 姓カナ

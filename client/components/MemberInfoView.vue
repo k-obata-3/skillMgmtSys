@@ -12,7 +12,7 @@
     <div class="member-info">
       <div class="member-info-row">
         <div class="title">名前</div>
-        <div>{{this.first_name}}&nbsp;{{this.last_name}}</div>
+        <div>{{this.last_name}}&nbsp;{{this.first_name}}</div>
         <div id="downloadBtn" v-show="this.$utils.getUserId() == this.userId || this.$utils.getAuth() == 0">
           <el-button type="" icon="el-icon-download" circle size="small" v-on:click="output()" v-loading.fullscreen.lock="downloadLoading"></el-button>
         </div>

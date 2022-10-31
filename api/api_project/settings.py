@@ -203,3 +203,11 @@ CORS_ALLOW_HEADERS = (
   'access-control-allow-origin',
   'access-control-allow-credentials',
 )
+
+# JWT生成 シークレットキー
+JWT_SECRET_KEY = 'aa785c482395933b5fa6535b976653894a10b258209f7f5c43416129a6249774'
+# パスワード シークレットソルト
+PASS_SECRET_SALT = 'Wmf4%89N!aqJ'
+# 初期パスワード
+INITIAL_PASSWORD = 'password'
+

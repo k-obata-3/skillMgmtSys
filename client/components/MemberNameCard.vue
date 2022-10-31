@@ -1,7 +1,7 @@
 <template>
   <div class="member-name-card card">
     <div class="name-row">
-      <h5>{{this.first_name}}&nbsp;{{this.last_name}}</h5>
+      <h5>{{this.last_name}}&nbsp;{{this.first_name}}</h5>
     </div>
     <div>
       <div class="department-row">

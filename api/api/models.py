@@ -47,6 +47,8 @@ class User(BaseModel):
   authority = models.BigIntegerField(blank=True, null=True, default=0)
   # 状態
   state = models.BigIntegerField(blank=True, null=True, default=1)
+  # 最終ログイン
+  last_login = models.DateTimeField(blank=True, null=True)
 
 """ ユーザ情報モデル """
 class UserInfo(BaseModel):
@@ -57,13 +59,13 @@ class UserInfo(BaseModel):
   id = models.BigAutoField(primary_key=True)
   # ユーザID
   user = models.ForeignKey(User, on_delete=models.CASCADE)
-  # 姓カナ
-  first_name_kana = models.CharField(blank=False, null=False, max_length=20)
   # 名カナ
+  first_name_kana = models.CharField(blank=False, null=False, max_length=20)
+  # 姓カナ
   last_name_kana = models.CharField(blank=False, null=False, max_length=20)
-  # 姓
-  first_name = models.CharField(blank=False, null=False, max_length=10)
   # 名
+  first_name = models.CharField(blank=False, null=False, max_length=10)
+  # 姓
   last_name = models.CharField(blank=False, null=False, max_length=10)
   # 生年月日
   birthday = models.DateTimeField(blank=False, null=False)

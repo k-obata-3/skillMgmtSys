@@ -72,8 +72,8 @@ export default {
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
   axios: {
     // Workaround to avoid enforcing hard-coded localhost:3000: https://github.com/nuxt-community/axios-module/issues/308
-    baseURL: 'http://192.168.0.250:3000/api/',
-    // baseURL: 'http://127.0.0.1:8000/api/',
+    // baseURL: 'http://192.168.0.250:3000/api/',
+    baseURL: 'http://127.0.0.1:8000/api/',
     credentials: true,
   },
 
@@ -94,59 +94,59 @@ export default {
   },
 
   router: {
-    // 公開サーバに配置する際はコメントアウト解除して npm run generate を実行
-    base: '/skillMgmtSys/client/dist/',
+    // 公開サーバに配置する際は npm run generate を実行
+    // base: '/client/',
     extendRoutes(routes, resolve) {
       routes.forEach(route => {
         if (route.name === 'index') {
           route.name = 'ログイン',
-          route.meta = {index: 1, hidden: false, select: false, requiresAuth: false}
+          route.meta = {index: 1, hidden: false, select: false, requiresAuth: false, icon: ['fas', 'right-to-bracket']}
         }
         else if (route.name === 'Home') {
           route.path = '/home',
           route.name = 'ホーム',
-          route.meta = {index: 2, hidden: false, select: false, requiresAuth: false}
+          route.meta = {index: 2, hidden: false, select: false, requiresAuth: false, icon: ['fa', 'chart-line']}
         }
         else if (route.name === 'ProjectList') {
           route.path = '/projectList',
           route.name = 'プロジェクト一覧',
-          route.meta = {index: 3, hidden: true, select: false, requiresAuth: false}
+          route.meta = {index: 3, hidden: true, select: false, requiresAuth: false, icon: ['fas', 'project-diagram']}
         }
         else if (route.name === 'MemberList') {
           route.path = '/memberList',
           route.name = 'メンバー一覧',
-          route.meta = {index: 4, hidden: false, select: false, requiresAuth: false}
+          route.meta = {index: 4, hidden: false, select: false, requiresAuth: false, icon: ['fas', 'users']}
         }
         else if (route.name === 'UserSetting') {
           route.path = '/userSetting',
           route.name = '個人設定',
-          route.meta = {index: 5, hidden: false, select: false, requiresAuth: false}
+          route.meta = {index: 5, hidden: false, select: false, requiresAuth: false, icon: ['fas', 'user-cog']}
         }
         else if (route.name === 'CareerSetting') {
           route.path = '/careerSetting',
           route.name = '経歴編集',
-          route.meta = {index: 6, hidden: false, select: false, requiresAuth: false}
+          route.meta = {index: 6, hidden: false, select: false, requiresAuth: false, icon: ['fas', 'user-edit']}
         }
         else if (route.name === 'ProjectSetting') {
           path: '/projectSetting',
           route.name = 'プロジェクト管理',
-          route.meta = {index: 7, hidden: false, select: false, requiresAuth: true}
+          route.meta = {index: 7, hidden: false, select: false, requiresAuth: true, icon: ['fas', 'list-check']}
         }
         else if (route.name === 'MemberSetting') {
           path: '/memberSetting',
           route.name = 'メンバー管理',
-          route.meta = {index: 8, hidden: false, select: false, requiresAuth: true}
+          route.meta = {index: 8, hidden: false, select: false, requiresAuth: true, icon: ['fas', 'users-cog']}
         }
         else if (route.name === 'MasterSetting') {
           path: '/masterSetting',
           route.name = 'マスタ管理',
-          route.meta = {index: 9, hidden: false, select: false, requiresAuth: true}
+          route.meta = {index: 9, hidden: false, select: false, requiresAuth: true, icon: ['fas', 'cubes']}
         }
       })
       routes.push({
         path: '/logout',
         name: 'ログアウト',
-        meta: {index: 9, hidden: false, select: false, requiresAuth: false }
+        meta: {index: 9, hidden: false, select: false, requiresAuth: false, icon: ['fas', 'right-from-bracket']}
       })
 
       routes.sort((a, b) => {
