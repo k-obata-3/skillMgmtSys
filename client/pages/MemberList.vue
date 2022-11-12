@@ -119,7 +119,7 @@ export default {
 }
 
 .member-list .card-item > div:hover div {
-  background-color: #ced4da;
+  background-color: #e9f6f6;
 }
 
 .member-list .card-item > div {

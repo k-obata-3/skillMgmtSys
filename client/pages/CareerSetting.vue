@@ -141,6 +141,7 @@ export default {
       this.isProjectListMode = false;
       this.isModalShow = false;
       this.isEditMode = true;
+      this.$refs.refEdit.getMasterItem();
       this.$refs.refEdit.setInputFormfromProjectList(record, this.userId);
     },
     onClosed() {

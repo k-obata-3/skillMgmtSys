@@ -105,17 +105,17 @@ export default {
               vm.frameworkList[index] = { name: val[0], value: parseInt(val[1]) }
             });
 
-            vm.langList.slice(0, 5).forEach((x) => {
+            vm.langList.slice(0, 10).forEach((x) => {
               vm.lang_labels.push(x['name']);
               vm.lang_datas.push(x['value']);
             });
 
-            vm.dbList.slice(0, 5).forEach((x) => {
+            vm.dbList.slice(0, 10).forEach((x) => {
               vm.db_labels.push(x['name']);
               vm.db_datas.push(x['value']);
             });
 
-            vm.frameworkList.slice(0, 5).forEach((x) => {
+            vm.frameworkList.slice(0, 10).forEach((x) => {
               vm.framework_labels.push(x['name']);
               vm.framework_datas.push(x['value']);
             });

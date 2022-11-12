@@ -1,6 +1,6 @@
 <template>
   <div class="user-info-list-view">
-    <el-table :data="this.list" style="width: 100%">
+    <el-table :data="this.list" style="width: 100%" stripe>
       <el-table-column prop="name" label="名前"></el-table-column>
       <el-table-column prop="department" label="部署"></el-table-column>
       <el-table-column prop="position" label="役職"></el-table-column>

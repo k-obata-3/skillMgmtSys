@@ -17,7 +17,7 @@ export default ({
         datasets: [
           {
             data: this.chartData,
-            backgroundColor: ['#6384BA', '#3E9AE7', '#B7DCF6', '#C6ADE4', '#B9EFA4'],
+            backgroundColor: ['#0a5947', '#1f8276', '#c86218', '#ec5064', '#fe9866', '#007043', '#03919b', '#ffaab0', '#f9a834', '#bceaf6'],
           }
         ]
       },

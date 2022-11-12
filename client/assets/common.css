@@ -56,21 +56,18 @@
   padding: 0.5rem;
 }
 
-th {
-  /* background: lightblue !important; */
+.el-table th.el-table__cell {
+  background-color: #EBEEF2 !important;
+}
+.el-table--enable-row-hover .el-table__body tr:hover>td.el-table__cell {
+  background-color: #e9f6f6 !important;
 }
 
-th, td {
-  /* border: solid 1px #333333; */
+.el-select-dropdown {
+  margin: 0 !important;
 }
-
-tbody tr {
-  /* cursor: pointer; */
-}
-
-thead tr th {
-  vertical-align: middle;
-  padding: 0.5rem 0 0.5rem 0.5rem !important;
+.el-popper .popper__arrow {
+  display: none;
 }
 
 .cell-overflow {

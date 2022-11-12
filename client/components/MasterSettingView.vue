@@ -23,7 +23,7 @@
       <el-button v-on:click="onCancel($event)" :disabled="!this.isEditing">キャンセル</el-button>
     </div>
     <div class="master-table">
-        <el-table :data="this.list" max-height="520" border>
+        <el-table :data="this.list" max-height="520" border stripe>
           <el-table-column prop="name" :label="this.selectTabLabel"></el-table-column>
           <el-table-column width="160" align="center">
             <template slot-scope="scope">

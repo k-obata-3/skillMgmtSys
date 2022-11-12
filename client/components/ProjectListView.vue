@@ -1,6 +1,6 @@
 <template>
   <div class="project-list-view">
-    <el-table :data="this.list" style="width: 100%">
+    <el-table :data="this.list" style="width: 100%" stripe>
       <el-table-column prop="projectName" label="プロジェクト名"></el-table-column>
       <el-table-column prop="overview" label="概要"></el-table-column>
       <el-table-column prop="startDate" label="開始日"></el-table-column>
