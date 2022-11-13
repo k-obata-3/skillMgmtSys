@@ -95,7 +95,6 @@ export default {
         {text: '有効', value: 1},
         {text: '停止', value: 0},
       ],
-      id: null,
     }
   },
   beforeCreated() {
@@ -134,7 +133,6 @@ export default {
         return vm.departmentOptions.filter(v => v.text == department).map(m => m.value).join(',');
       });
       var inputData = {
-        'company': this.$utils.getCompanyId(),
         'mail_address': this.form.mail_address,
         'password': null,
         'first_name_kana': this.form.first_name_kana,
@@ -176,10 +174,9 @@ export default {
         });
       }
     },
-    getDepartment(id){
-      if(id == null) return;
+    getDepartment(){
       var vm = this;
-      this.$apiService.getDepartmentList(id, (res) => {
+      this.$apiService.getDepartmentList((res) => {
         if(res != null) {
           var department = [];
           if (Object.keys(res.data).length) department = JSON.parse(res.data);
@@ -219,7 +216,6 @@ export default {
       this.form.state = '有効';
       this.selectedDepartment = [];
       this.departmentOptions = [];
-      this.id = null;
     },
   }
 }

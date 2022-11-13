@@ -48,7 +48,6 @@ export default {
   },
   data() {
     return {
-      userId: this.$utils.getUserId(),
       isEditMode: false,
       isPreviewMode: false,
       isProjectListMode: false,
@@ -79,7 +78,7 @@ export default {
       var items = [];
       var vm = this;
       var offset = page * this.limit - this.limit
-      this.$apiService.getCareerInfoList(this.userId, this.limit, offset, function(res) {
+      this.$apiService.getCareerInfoList(this.$utils.getUserId(), this.limit, offset, function(res) {
         if(res != null) {
           var data = JSON.parse(res.data);
           if (data.careerInfo.length) {
@@ -107,7 +106,7 @@ export default {
       this.setListMode();
     },
     onEdit(record) {
-      this.setEditMode(record.id, this.userId);
+      this.setEditMode(record.id, this.$utils.getUserId());
       this.$refs.refEdit.getMasterItem();
     },
     onPreview(record) {
@@ -117,7 +116,7 @@ export default {
       this.setListMode();
     },
     add() {
-      this.setEditMode(null, this.userId);
+      this.setEditMode(null, this.$utils.getUserId());
       this.$refs.refEdit.getMasterItem();
     },
     setListMode() {
@@ -125,7 +124,7 @@ export default {
       this.isEditMode = false;
     },
     setEditMode(id) {
-      this.$refs.refEdit.callApi(id, this.userId);
+      this.$refs.refEdit.callApi(id, this.$utils.getUserId());
       this.isEditMode = true;
     },
     setPreviewMode(id) {
@@ -142,7 +141,7 @@ export default {
       this.isModalShow = false;
       this.isEditMode = true;
       this.$refs.refEdit.getMasterItem();
-      this.$refs.refEdit.setInputFormfromProjectList(record, this.userId);
+      this.$refs.refEdit.setInputFormfromProjectList(record, this.$utils.getUserId());
     },
     onClosed() {
       this.isEditMode = false;

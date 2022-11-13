@@ -59,7 +59,6 @@ export default {
   },
   data() {
     return{
-      companyId: this.$utils.getCompanyId(),
       userId: null,
       isEdit: false,
       isAdd: false,
@@ -89,7 +88,7 @@ export default {
     getUserList(page) {
       var vm = this;
       var offset = page * this.limit - this.limit
-      this.$apiService.getUserInfoExcludeSelfList(this.companyId, this.limit, offset, function(res) {
+      this.$apiService.getUserInfoExcludeSelfList(this.limit, offset, function(res) {
         var users = [];
         if(res != null) {
           var data = JSON.parse(res.data);
@@ -113,7 +112,7 @@ export default {
       this.setup(true, false);
       this.setUserId(null);
       Vue.nextTick(() => {
-        this.$refs.userAdd.getDepartment(this.companyId);
+        this.$refs.userAdd.getDepartment();
       });
     },
     onAddCancel() {

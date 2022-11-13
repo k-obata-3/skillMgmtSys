@@ -26,7 +26,6 @@ export default {
   },
   data() {
     return{
-      companyId: this.$utils.getCompanyId(),
       limit: 10,
     }
   },
@@ -52,7 +51,7 @@ export default {
       var items = [];
       var vm = this;
       var offset = page * this.limit - this.limit
-      this.$apiService.getProjectList(this.companyId, this.limit, offset, function(res) {
+      this.$apiService.getProjectList(this.limit, offset, function(res) {
         if(res != null) {
           var data = JSON.parse(res.data);
           if (data.project.length) {

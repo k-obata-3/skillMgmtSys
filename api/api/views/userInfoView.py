@@ -369,6 +369,7 @@ class UserCreateAPIView(CreateAPIView):
 
     try:
       with transaction.atomic():
+        request.data['company'] = company_id
         # 初期パスワードをセット
         request.data['password'] = Utils.getInitialPasswordHash()
 

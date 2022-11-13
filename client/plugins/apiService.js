@@ -9,11 +9,11 @@ class ApiService {
   BASE_URL = '';
 
   async doLogin (params, callback) {
-    const url = `${this.BASE_URL}/login/`;
+    const url = `${this.BASE_URL}/login`;
     var vm = this;
     await this.axios.post(url, params)
     .then(response => {
-      vm.utils.saveLoginInfo(response.data.token, response.data.user.id, response.data.user.company_id, response.data.user.auth);
+      vm.utils.saveLoginInfo(response.data.user.id, response.data.user.auth);
       callback(response.data);
     })
     .catch(err => {
@@ -23,8 +23,8 @@ class ApiService {
     });
   }
 
-  async getLoginUserInfo(id, callback) {
-    const url = `${this.BASE_URL}/selfUserInfoRetrieve/?user_id=${id}`;
+  async getLoginUserInfo(callback) {
+    const url = `${this.BASE_URL}/selfUserInfoRetrieve`;
     await this.axios.get(url)
     .then(response => {
       callback(response.data);
@@ -36,8 +36,21 @@ class ApiService {
     });
   }
 
-  async updateLoginUserInfo(id, param, callback) {
-    const url = `${this.BASE_URL}/selfUserInfoUpdate/?user_id=${id}`;
+  async updateLoginUserInfo(param, callback) {
+    const url = `${this.BASE_URL}/selfUserInfoUpdate`;
+    await this.axios.put(url, param)
+    .then(response => {
+      callback(response.data);
+    })
+    .catch(err => {
+
+    })
+    .finally(() => {
+    });
+  }
+
+  async updatePassword(param, callback) {
+    const url = `${this.BASE_URL}/passwordUpdate`;
     await this.axios.put(url, param)
     .then(response => {
       callback(response.data);
@@ -62,19 +75,6 @@ class ApiService {
     });
   }
 
-  async updatePassword(id, param, callback) {
-    const url = `${this.BASE_URL}/passwordUpdate/?user_id=${id}`;
-    await this.axios.put(url, param)
-    .then(response => {
-      callback(response.data);
-    })
-    .catch(err => {
-
-    })
-    .finally(() => {
-    });
-  }
-
   async getUserInfo(id, callback) {
     const url = `${this.BASE_URL}/userInfoRetrieve/?user_id=${id}`;
     await this.axios.get(url)
@@ -88,8 +88,8 @@ class ApiService {
     });
   }
 
-  async getDepartmentList(id, callback) {
-    const url = `${this.BASE_URL}/departmentList/?company_id=${id}`;
+  async getDepartmentList(callback) {
+    const url = `${this.BASE_URL}/departmentList`;
     await this.axios.get(url)
     .then(response => {
       callback(response.data);
@@ -153,8 +153,8 @@ class ApiService {
     });
   }
 
-  async getCareerInfoAllList(id, callback) {
-    const url = `${this.BASE_URL}/careerInfoAllList/?company_id=${id}`;
+  async getCareerInfoAllList(callback) {
+    const url = `${this.BASE_URL}/careerInfoAllList`;
     await this.axios.get(url)
     .then(response => {
       callback(response.data);
@@ -166,8 +166,8 @@ class ApiService {
     });
   }
 
-  async getUserInfoList(id, limit, offset, callback) {
-    const url = `${this.BASE_URL}/userInfoList/?company_id=${id}&limit=${limit}&offset=${offset}`;
+  async getUserInfoList(limit, offset, callback) {
+    const url = `${this.BASE_URL}/userInfoList/?limit=${limit}&offset=${offset}`;
     await this.axios.get(url)
     .then(response => {
       callback(response.data);
@@ -179,8 +179,8 @@ class ApiService {
     });
   }
 
-  async getUserInfoExcludeSelfList(id, limit, offset, callback) {
-    const url = `${this.BASE_URL}/userInfoExcludeSelfList/?company_id=${id}&limit=${limit}&offset=${offset}`;
+  async getUserInfoExcludeSelfList(limit, offset, callback) {
+    const url = `${this.BASE_URL}/userInfoExcludeSelfList/?limit=${limit}&offset=${offset}`;
     await this.axios.get(url)
     .then(response => {
       callback(response.data);
@@ -244,8 +244,8 @@ class ApiService {
     });
   }
 
-  async updateCareerInfo(id, param, callback) {
-    const url = `${this.BASE_URL}/careerInfoUpdate/?id=${id}`;
+  async updateCareerInfo(param, callback) {
+    const url = `${this.BASE_URL}/careerInfoUpdate`;
     await this.axios.put(url, param)
     .then(response => {
       callback(response.data);
@@ -270,8 +270,8 @@ class ApiService {
     });
   }
 
-  async getProjectList(id, limit, offset, callback) {
-    const url = `${this.BASE_URL}/projectList/?company_id=${id}&limit=${limit}&offset=${offset}`;
+  async getProjectList(limit, offset, callback) {
+    const url = `${this.BASE_URL}/projectList/?limit=${limit}&offset=${offset}`;
     await this.axios.get(url)
     .then(response => {
       callback(response.data);
@@ -309,8 +309,8 @@ class ApiService {
     });
   }
 
-  async updateProject(id, param, callback) {
-    const url = `${this.BASE_URL}/projectUpdate/?id=${id}`;
+  async updateProject(param, callback) {
+    const url = `${this.BASE_URL}/projectUpdate`;
     await this.axios.put(url, param)
     .then(response => {
       callback(response.data);
@@ -335,8 +335,8 @@ class ApiService {
     });
   }
 
-  async getMasterItemList(id, key, callback) {
-    const url = `${this.BASE_URL}/masterItemList/?company_id=${id}&key=${key}`;
+  async getMasterItemList(key, callback) {
+    const url = `${this.BASE_URL}/masterItemList/?key=${key}`;
     await this.axios.get(url)
     .then(response => {
       callback(response.data);
@@ -348,8 +348,8 @@ class ApiService {
     });
   }
 
-  async getMasterItemAllList(id, callback) {
-    const url = `${this.BASE_URL}/masterItemAllList/?company_id=${id}`;
+  async getMasterItemAllList(callback) {
+    const url = `${this.BASE_URL}/masterItemAllList`;
     await this.axios.get(url)
     .then(response => {
       callback(response.data);

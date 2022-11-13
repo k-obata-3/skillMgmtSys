@@ -167,7 +167,6 @@ class ProjectUpdateAPIView(UpdateAPIView):
       msg = "Authorization 無効"
       raise exceptions.AuthenticationFailed(msg)
 
-    project_id = self.request.GET.get('id')
     # 認証情報からユーザと権限を取得
     login_user = self.request.user
     projectReqData = {
@@ -179,6 +178,8 @@ class ProjectUpdateAPIView(UpdateAPIView):
     }
 
     try:
+      project_id = self.request.data['project_id']
+
       with transaction.atomic():
         project = Project.objects.filter(id = project_id, company = company_id).first()
 

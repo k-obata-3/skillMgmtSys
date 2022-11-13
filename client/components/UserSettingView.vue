@@ -100,7 +100,6 @@ export default {
         currentPassword: null,
         newPassword: null,
       },
-      id: this.$utils.getUserId(),
       isUserSetting: true,
     }
   },
@@ -111,7 +110,7 @@ export default {
   beforeMount() {
   },
   mounted() {
-    this.callApi(this.id);
+    this.callApi();
   },
   beforeUpdate() {
   },
@@ -142,7 +141,6 @@ export default {
           return vm.departmentOptions.filter(v => v.text == department).map(m => m.value).join(',');
         });
         var inputData = {
-          'company': this.$utils.getCompanyId(),
           'first_name_kana': this.form.first_name_kana,
           'last_name_kana': this.form.last_name_kana,
           'first_name': this.form.first_name,
@@ -153,7 +151,7 @@ export default {
         }
 
         var param = JSON.parse(JSON.stringify(inputData))
-        this.$apiService.updateLoginUserInfo(this.id, param, (res) => {
+        this.$apiService.updateLoginUserInfo(param, (res) => {
           if(res != null) {
             this.$message({type: 'success', message: '更新しました。'});
           }
@@ -174,7 +172,7 @@ export default {
           'new_password': this.$utils.getHashText(this.passChangeform.newPassword),
         }
         var param = JSON.parse(JSON.stringify(p));
-        this.$apiService.updatePassword(this.userId, param, (res) => {
+        this.$apiService.updatePassword(param, (res) => {
           if(res != null) {
             this.$message({type: 'success', message: '変更しました。'});
             this.clearPassChangeForm();
@@ -184,9 +182,9 @@ export default {
 
       });
     },
-    callApi(id){
+    callApi(){
       var vm = this;
-      this.$apiService.getLoginUserInfo(id, (res) => {
+      this.$apiService.getLoginUserInfo((res) => {
         if(res != null) {
           this.setForm(res, vm);
         }
@@ -218,7 +216,6 @@ export default {
       this.form.position = '';
       this.selectedDepartment = [];
       this.departmentOptions = [];
-      this.id = null;
     },
     clearPassChangeForm() {
       this.passChangeform.currentPassword = null;

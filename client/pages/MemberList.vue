@@ -68,7 +68,7 @@ export default {
     callApi(page) {
       var vm = this;
       var offset = page * this.limit - this.limit
-      this.$apiService.getUserInfoList(this.$utils.getCompanyId(), this.limit, offset, function(res) {
+      this.$apiService.getUserInfoList(this.limit, offset, function(res) {
         if(res != null) {
           var data = JSON.parse(res.data);
           const temp = [];

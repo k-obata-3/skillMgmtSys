@@ -1,17 +1,15 @@
 class Utils {
-  static COOKIE_KEY = ["skill_mgmt_sys_user_id", "skill_mgmt_sys_company_id", "skill_mgmt_sys_auth"];
+  static COOKIE_KEY = ["skill_mgmt_sys_user_id", "skill_mgmt_sys_auth"];
   static crypto = require("crypto");
 
-  static saveLoginInfo(token, id, company, auth) {
-    this.saveCookie(this.COOKIE_KEY[0], encodeURIComponent(id));
-    this.saveCookie(this.COOKIE_KEY[1], encodeURIComponent(company));
-    this.saveCookie(this.COOKIE_KEY[2], encodeURIComponent(auth));
+  static saveLoginInfo(userId, auth) {
+    this.saveCookie(this.COOKIE_KEY[0], encodeURIComponent(userId));
+    this.saveCookie(this.COOKIE_KEY[1], encodeURIComponent(auth));
   }
 
   static clearLoginInfo() {
     document.cookie = `${this.COOKIE_KEY[0]}=;max-age=0`;
     document.cookie = `${this.COOKIE_KEY[1]}=;max-age=0`;
-    document.cookie = `${this.COOKIE_KEY[2]}=;max-age=0`;
   }
 
   static saveCookie(key, text) {
@@ -48,12 +46,8 @@ class Utils {
     return this.getCookieData(this.COOKIE_KEY[0]);
   }
 
-  static getCompanyId() {
-    return this.getCookieData(this.COOKIE_KEY[1]);
-  }
-
   static getAuth() {
-    return this.getCookieData(this.COOKIE_KEY[2]);
+    return this.getCookieData(this.COOKIE_KEY[1]);
   }
 
   static GetDate(val) {

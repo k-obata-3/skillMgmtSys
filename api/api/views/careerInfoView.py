@@ -248,10 +248,9 @@ class CareerInfoUpdateAPIView(UpdateAPIView):
       msg = "Authorization 無効"
       raise exceptions.AuthenticationFailed(msg)
 
-    career_id = self.request.GET.get('id')
-
     try:
       with transaction.atomic():
+        career_id = request.data['careerId']
         career_info = CareerInfo.objects.get(id = career_id)
 
         serializer = CareerInfoSerializer(career_info, data=request.data)

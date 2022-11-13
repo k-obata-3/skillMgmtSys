@@ -32,7 +32,6 @@ export default {
   },
   data() {
     return{
-      companyId: this.$utils.getCompanyId(),
       isEditMode: false,
       list: [],
       limit: 10,
@@ -60,7 +59,7 @@ export default {
       var items = [];
       var vm = this;
       var offset = page * this.limit - this.limit
-      this.$apiService.getProjectList(this.companyId, this.limit, offset, function(res) {
+      this.$apiService.getProjectList(this.limit, offset, function(res) {
         if(res != null) {
           var data = JSON.parse(res.data);
           if (data.project.length) {
@@ -86,20 +85,20 @@ export default {
       this.setListMode();
     },
     onEdit(record) {
-      this.setEditMode(record.id, this.companyId);
+      this.setEditMode(record.id);
     },
     onCancel(){
       this.setListMode();
     },
     add() {
-      this.setEditMode(null, this.companyId);
+      this.setEditMode(null);
     },
     setListMode() {
       this.getProjectList(1);
       this.isEditMode = false;
     },
     setEditMode(id) {
-      this.$refs.refEdit.callApi(id, this.companyId);
+      this.$refs.refEdit.callApi(id);
       this.isEditMode = true;
     }
   }

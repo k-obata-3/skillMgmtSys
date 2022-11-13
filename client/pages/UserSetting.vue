@@ -22,7 +22,6 @@ export default {
   },
   data() {
     return {
-      id: this.$utils.getUserId()
     }
   },
   beforeCreated() {

@@ -77,7 +77,7 @@ export default {
     methods: {
       callApi() {
         var vm = this;
-        this.$apiService.getCareerInfoAllList(this.$utils.getCompanyId(), (res) => {
+        this.$apiService.getCareerInfoAllList((res) => {
           if (res != null) {
             var list = [];
             if (Object.keys(res.data).length) {

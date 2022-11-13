@@ -156,20 +156,18 @@ export default {
     refresh() {
       this.list = [];
       if(this.selectTabName == 'department') {
-        this.getDepartment(this.$utils.getCompanyId());
+        this.getDepartment();
       } else {
-        this.getMasterItem(this.$utils.getCompanyId(), this.selectTabName);
+        this.getMasterItem(this.selectTabName);
       }
 
       this.selectItemId = null;
       this.form.name = ''
       this.isEditing = false;
     },
-    getDepartment(id){
-      if(id == null) return;
-
+    getDepartment(){
       var vm = this;
-      this.$apiService.getDepartmentList(id, (res) => {
+      this.$apiService.getDepartmentList((res) => {
         if(res != null) {
           var department = [];
           if (Object.keys(res.data).length) department = JSON.parse(res.data);
@@ -179,11 +177,11 @@ export default {
         }
       })
     },
-    getMasterItem(id, key){
-      if(id == null || key == null) return;
+    getMasterItem(key){
+      if(key == null) return;
 
       var vm = this;
-      this.$apiService.getMasterItemList(id, key, (res) => {
+      this.$apiService.getMasterItemList(key, (res) => {
         if(res != null) {
           var masterItem = [];
           if (Object.keys(res.data).length) masterItem = JSON.parse(res.data);

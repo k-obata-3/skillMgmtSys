@@ -53,7 +53,6 @@ export default {
         end_date: null,
       },
       projectId: null,
-      companyId: null,
     };
   },
   beforeCreated() {},
@@ -108,6 +107,7 @@ export default {
       var startDate = this.form.start_date == "" ? null : this.form.start_date;
       var endDate = this.form.end_date == "" ? null : this.form.end_date;
       var data = {
+        project_id: this.projectId,
         name: name,
         overview: overview,
         start_date: startDate,
@@ -123,7 +123,7 @@ export default {
           }
         });
       } else {
-        this.$apiService.updateProject(vm.projectId, param, function(updateRes) {
+        this.$apiService.updateProject(param, function(updateRes) {
           if (updateRes != null) {
             vm.$message({type: 'success', message: '登録しました。'});
             // 親コンポーネントに onClosed イベントを渡す

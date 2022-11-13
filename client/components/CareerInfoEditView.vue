@@ -168,7 +168,7 @@ export default {
   methods: {
     getMasterItem(){
       var vm = this;
-      this.$apiService.getMasterItemAllList(this.$utils.getCompanyId(), (res) => {
+      this.$apiService.getMasterItemAllList((res) => {
         if(res != null) {
           var masterItem = [];
           if (Object.keys(res.data).length) masterItem = JSON.parse(res.data);
@@ -244,6 +244,7 @@ export default {
       var endDate = this.form.end_date == "" ? null : this.form.end_date;
       var other = this.form.other == "" ? null : this.form.other;
       var data = {
+        careerId: this.careerId,
         user: this.userId,
         project_name: projectName,
         overview: overview,
@@ -268,7 +269,7 @@ export default {
           }
         });
       } else {
-        this.$apiService.updateCareerInfo(vm.careerId, param, function(updateRes) {
+        this.$apiService.updateCareerInfo(param, function(updateRes) {
           if (updateRes != null) {
             // 親コンポーネントに onClosed イベントを渡す
             vm.$emit("onRegistered");
